@@ -157,7 +157,7 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/", methods=['POST'])
+@app.route("/")
 def home():
     return render_template("index.html")
 
