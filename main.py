@@ -158,7 +158,6 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route("/", methods=['GET','POST'])
-@login_required
 def home():
     return render_template("index.html")
 
