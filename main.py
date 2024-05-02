@@ -124,7 +124,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("secrets"))
+        return redirect(url_for("get_all_todos"))
 
     return render_template("register.html", logged_in=current_user.is_authenticated)
 
@@ -146,7 +146,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('secrets'))
+            return redirect(url_for('get_all_todos'))
 
     return render_template("login.html", logged_in=current_user.is_authenticated)
 
@@ -155,12 +155,13 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
+@login_required
 @app.route("/", methods=['GET'])
 def home():
     return render_template("index.html")
-@login_required
+
 @app.route("/create", methods=['GET', 'POST'])
+@login_required
 def create_todo():
     form = TodoForm()
     data = request.get_json()
