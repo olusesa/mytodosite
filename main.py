@@ -4,7 +4,7 @@ from flask_gravatar import Gravatar
 import psycopg2
 from flask import Flask, request, jsonify
 from todoform import TodoForm
-from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
+from flask import Flask, render_template, request, url_for, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
