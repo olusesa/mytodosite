@@ -154,8 +154,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
-@login_required
+    return redirect(url_for('base'))
+
 @app.route("/", methods=['GET'])
 def home():
     return render_template("index.html")
@@ -180,7 +180,7 @@ def create_todo():
     return {"id": user_id, "username": data['username'], "name": data['name'],
             "message": f"Username:  {data['username']} created successfully."}, 201
 
-@app.route("/search/todos/all", methods=["POST"])
+@app.route("/search/todos/all", methods=["GET"])
 @login_required
 def get_all_todos():
     with connection:
@@ -198,6 +198,7 @@ def get_all_todos():
     render_template("display_todos.html", todos=todos, name=current_user, logged_in=True)
 
 @app.route("/search/todo/<int:todo_id>", endpoint='get_todo', methods=["GET"])
+@login_required
 def get_todo(todo_id):
     with connection:
         with connection.cursor() as cursor:
@@ -211,6 +212,7 @@ def get_todo(todo_id):
     render_template("display_todos.html", todos=todo, name=current_user.name, logged_in=True)
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_todo_entries', methods=["PUT"])
+@login_required
 def update_todo_entries(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -231,6 +233,7 @@ def update_todo_entries(todo_id):
     return jsonify({"id": todo_id, "username": form.username, "name": form.name, "email": form.email,
                     "message": f"Todo with username {data['username']} entries updated successfully."})
 @app.route("/update/todo/<int:todo_id>", endpoint='update_email_entry', methods=["PATCH"])
+@login_required
 def update_email_entry(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -244,6 +247,7 @@ def update_email_entry(todo_id):
         f"The email of Todo with ID {todo_id} updated successfully."})
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_todo_entry', methods=["PATCH"])
+@login_required
 def update_todo_entry(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -257,6 +261,7 @@ def update_todo_entry(todo_id):
         f"The Todo entry with ID {todo_id} updated successfully."})
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_added_date_entry', methods=["PATCH"])
+@login_required
 def update_added_date_entry(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -270,6 +275,7 @@ def update_added_date_entry(todo_id):
         f"The Added date of Todo with ID {todo_id} updated successfully."})
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_due_date_entry', methods=["PATCH"])
+@login_required
 def update_due_date_entry(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -283,6 +289,7 @@ def update_due_date_entry(todo_id):
         f"The due date of Todo with ID {todo_id} updated successfully."})
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_status_entry', methods=["PATCH"])
+@login_required
 def update_status_entry(todo_id):
     data = request.get_json()
     form = TodoForm()
@@ -295,6 +302,7 @@ def update_status_entry(todo_id):
     return jsonify({"id": todo_id, "status": data['status'], "message":
         f"The status of Todo with ID {todo_id} updated successfully."})
 @app.route("/delete/user/<int:todo_id>", methods=["DELETE"])
+@login_required
 def delete_todo(todo_id):
     with connection:
         with connection.cursor() as cursor:
