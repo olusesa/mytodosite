@@ -47,7 +47,7 @@
           <li class="col-auto d-flex align-items-center px-1 pr-3">
             <a class="col-auto d-flex align-items-center px-1 pr-3" href="{{ url_for('register') }}">Register</a>
           </li>
-          {% endif %}
+          {% else %}
           <li class="col-auto d-flex align-items-center px-1 pr-3">
             <a class="col-auto d-flex align-items-center px-1 pr-3" href="{{ url_for('logout') }}">Log Out</a>
           </li>
@@ -73,6 +73,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% block content %}
 {% endblock %}
   <div id="preloader"></div>

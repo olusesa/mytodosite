@@ -8,16 +8,18 @@ from flask import Flask, render_template, request, url_for, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from dotenv import  load_dotenv
 from sqlalchemy import Integer, String
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
 
-#load_dotenv()
+load_dotenv()
 app = Flask(__name__)
 url = os.getenv("DATABASE_URL")
-#app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
-app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
+#app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+app.config['SECRET_KEY'] = 'QQWqWERRRWtYbggdd#$%dt'
 connection = psycopg2.connect(url)
 
 CREATE_TODOS_TABLE = ("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, username TEXT, name TEXT, "
@@ -155,7 +157,7 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['POST'])
 def home():
     return render_template("index.html")
 
@@ -192,7 +194,7 @@ def get_all_todos():
                                    "todo": todo[5], "added_date": todo[6], "due_date": todo[7], "status": todo[8]})
                 return jsonify(result)
             else:
-                return jsonify({"error": f"Users not found."}), 404
+                return jsonify({"error": f" Todo not found."}), 404
     render_template("display_todos.html", todos=todos, name=current_user, logged_in=True)
 
 @app.route("/search/todo/<int:todo_id>", endpoint='get_todo', methods=["GET"])
@@ -308,7 +310,7 @@ def delete_todo(todo_id):
                 return jsonify({"error": f"User with ID {todo_id} not found."}), 404
     return jsonify({"message": f"Todo with ID {todo_id} deleted."})
 
-@app.route('/secrets')
+@app.route('/secrets', methods=['POST'])
 @login_required
 def secrets():
     print(current_user.name)

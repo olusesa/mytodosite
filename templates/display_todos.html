@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
-{% block content %}
-{% for todo in todos %}
+<!--{% block content %}-->
+<!--{% for todo in todos %}-->
 <!-- Todo list section -->
 <div class="row mx-1 px-5 pb-3 w-80">
     <div class="col mx-auto">
@@ -16,7 +15,7 @@
                     <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" readonly value="{{todo.todo}}" title="{{todo.todo}}" />
                     <button type="button" class="btn btn-success">Update</button>
                     <button type="button" class="btn btn-danger">Delete</button>
-                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input rounded px-3 d-none" value="{{todo.todo}}" />
+<!--                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input rounded px-3 d-none" value="{{todo.todo}}" />-->
                 </div>
                 <div class="col-auto m-1 p-0 px-3 d-none">
                 </div>
@@ -39,5 +38,5 @@
             </div>
         </div>
     </div>
-{% endfor %}
-{% endblock %}
+<!--{% endfor %}-->
+<!--{% endblock %}-->
