@@ -151,7 +151,6 @@ def login():
     return render_template("login.html", logged_in=current_user.is_authenticated)
 
 @app.route('/logout')
-@login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
@@ -180,8 +179,7 @@ def create_todo():
     return {"id": user_id, "username": data['username'], "name": data['name'],
             "message": f"Username:  {data['username']} created successfully."}, 201
 
-@app.route("/search/todos/all", methods=["GET"])
-@login_required
+@app.route("/search/todos/all", methods=['GET', 'POST'])
 def get_all_todos():
     with connection:
         with connection.cursor() as cursor:
@@ -198,7 +196,6 @@ def get_all_todos():
     render_template("display_todos.html", todos=todos, name=current_user, logged_in=True)
 
 @app.route("/search/todo/<int:todo_id>", endpoint='get_todo', methods=["GET"])
-@login_required
 def get_todo(todo_id):
     with connection:
         with connection.cursor() as cursor:
@@ -316,8 +313,6 @@ def delete_todo(todo_id):
 def secrets():
     print(current_user.name)
     return render_template("secrets.html", name=current_user.name, logged_in=True)
-
-
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
