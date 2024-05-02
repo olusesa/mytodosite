@@ -157,7 +157,8 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/")
+@app.route("/", methods=['GET','POST'])
+@login_required
 def home():
     return render_template("index.html")
 
@@ -182,6 +183,7 @@ def create_todo():
             "message": f"Username:  {data['username']} created successfully."}, 201
 
 @app.route("/search/todos/all", methods=['GET', 'POST'])
+@login_required
 def get_all_todos():
     with connection:
         with connection.cursor() as cursor:
@@ -198,6 +200,7 @@ def get_all_todos():
     render_template("display_todos.html", todos=todos, name=current_user, logged_in=True)
 
 @app.route("/search/todo/<int:todo_id>", endpoint='get_todo', methods=["GET"])
+@login_required
 def get_todo(todo_id):
     with connection:
         with connection.cursor() as cursor:
@@ -310,7 +313,7 @@ def delete_todo(todo_id):
                 return jsonify({"error": f"User with ID {todo_id} not found."}), 404
     return jsonify({"message": f"Todo with ID {todo_id} deleted."})
 
-@app.route('/secrets', methods=['POST'])
+@app.route('/secrets', methods=['GET','POST'])
 @login_required
 def secrets():
     print(current_user.name)
