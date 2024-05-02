@@ -124,7 +124,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("get_all_todos"))
+        return redirect(url_for("secrets"))
 
     return render_template("register.html", logged_in=current_user.is_authenticated)
 
@@ -146,7 +146,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('get_all_todos'))
+            return redirect(url_for('secrets'))
 
     return render_template("login.html", logged_in=current_user.is_authenticated)
 
@@ -154,7 +154,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('base'))
+    return redirect(url_for('home'))
 
 @app.route("/", methods=['GET'])
 def home():
@@ -310,6 +310,14 @@ def delete_todo(todo_id):
             if cursor.rowcount == 0:
                 return jsonify({"error": f"User with ID {todo_id} not found."}), 404
     return jsonify({"message": f"Todo with ID {todo_id} deleted."})
+
+@app.route('/secrets')
+@login_required
+def secrets():
+    print(current_user.name)
+    return render_template("secrets.html", name=current_user.name, logged_in=True)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
