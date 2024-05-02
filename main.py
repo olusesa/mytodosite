@@ -69,7 +69,7 @@ gravatar = Gravatar(app,
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -153,13 +153,14 @@ def login():
     return render_template("login.html", logged_in=current_user.is_authenticated)
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/", methods=['GET','POST'])
+@app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html" , logged_in=current_user.is_authenticated)
 
 @app.route("/create", methods=['GET', 'POST'])
 @login_required
