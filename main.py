@@ -14,11 +14,12 @@ from sqlalchemy import Integer, String
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
 
-load_dotenv()
+#load_dotenv()
 app = Flask(__name__)
 url = os.getenv("DATABASE_URL")
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-#app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+#app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 connection = psycopg2.connect(url)
 
 CREATE_TODOS_TABLE = ("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, username TEXT, name TEXT, "
@@ -156,16 +157,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
-
-# @app.route('/download')
-# @login_required
-# def download():
-#
-#     # return send_from_directory('/static/files/', 'cheat_sheet.pdf')
-#     return send_from_directory('static', path="files/cheat_sheet.pdf")
-
-
 
 @app.route("/", methods=['GET'])
 def home():
