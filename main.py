@@ -4,8 +4,6 @@ from flask_gravatar import Gravatar
 import psycopg2
 from flask import Flask, request, jsonify
 from todoform import TodoForm
-from dotenv import load_dotenv
-#from auth import *
 from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
