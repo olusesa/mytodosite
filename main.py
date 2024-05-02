@@ -16,10 +16,10 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 load_dotenv()
 app = Flask(__name__)
 url = os.getenv("DATABASE_URL")
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
-#app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
-app.config['SECRET_KEY'] = 'QQWqWERRRWtYbggdd#$%dt'
+# app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///posts.db')
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+# app.config['SECRET_KEY'] = 'QQWqWERRRWtYbggdd#$%dt'
 connection = psycopg2.connect(url)
 
 CREATE_TODOS_TABLE = ("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, username TEXT, name TEXT, "
