@@ -174,8 +174,7 @@ def create_todo():
         with connection.cursor() as cursor:
             cursor.execute(INSERT_TODOS_RETURN_ID, (form.todo, form.added_date, form.due_date, form.status))
             user_id = cursor.fetchone()[0]
-    return {"id": user_id, "username": data['username'], "name": data['name'],
-            "message": f"Username:  {data['username']} created successfully."}, 201
+    return redirect(url_for('home'))
 
 @app.route("/search/todos/all", methods=['GET', 'POST'])
 @login_required
