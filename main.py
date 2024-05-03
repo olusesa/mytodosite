@@ -173,7 +173,15 @@ def create_todo():
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(INSERT_TODOS_RETURN_ID, (form.todo, form.added_date, form.due_date, form.status))
-            user_id = cursor.fetchone()[0]
+            todo_id = cursor.fetchone()[0]
+            cursor.execute("SELECT * FROM todos WHERE id = %s", (todo_id,))
+            todo = cursor.fetchone()
+            if todo:
+                result = jsonify({"id": todo[0], "todo": todo[5], "added_date": todo[6], "due_date": todo[7],
+                                  "status": todo[8]})
+                return result
+            else:
+                f"Todo creation for todo ID - {todo_id} failed!"
     return redirect(url_for('home'))
 
 @app.route("/search/todos/all", methods=['GET', 'POST'])
