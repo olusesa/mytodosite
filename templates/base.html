@@ -41,15 +41,15 @@
     <div class="row m-1 p-3 px-5 justify-content-end">
         <!-- Hide the Login/Registration navigation for logged-in users -->
           {% if not logged_in: %}
-          <li class="col-auto d-flex align-items-center px-1 pr-3">
-            <a class="col-auto d-flex align-items-center px-1 pr-3" href="{{ url_for('login') }}">Login</a>
+          <li class="col-auto d-flex align-items-center px-1 pr-5">
+            <a class="col-auto d-flex align-items-center px-1 pr-5" href="{{ url_for('login') }}">Login</a>
           </li>
-          <li class="col-auto d-flex align-items-center px-1 pr-3">
-            <a class="col-auto d-flex align-items-center px-1 pr-3" href="{{ url_for('register') }}">Register</a>
+          <li class="col-auto d-flex align-items-center px-1 pr-5">
+            <a class="col-auto d-flex align-items-center px-1 pr-5" href="{{ url_for('register') }}">Register</a>
           </li>
           {% else %}
-          <li class="col-auto d-flex align-items-center px-1 pr-3">
-            <a class="col-auto d-flex align-items-center px-1 pr-3" href="{{ url_for('logout') }}">Log Out</a>
+          <li class="col-auto d-flex align-items-center px-1 pr-5">
+            <a class="col-auto d-flex align-items-center px-1 pr-5" href="{{ url_for('logout') }}">Log Out</a>
           </li>
         </ul>
       </div>
@@ -62,7 +62,7 @@
                 <option value="has-due-date">Has due date</option>
             </select>
         </div>
-        <div class="col-auto d-flex align-items-center px-1 pr-3">
+        <div class="col-auto d-flex align-items-center px-1 pr-5">
             <label class="text-secondary my-2 pr-2 view-opt-label">Sort</label>
             <select class="custom-select custom-select-sm btn my-2">
                 <option value="added-date-asc" selected>Added date</option>
