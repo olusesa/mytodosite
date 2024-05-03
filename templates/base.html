@@ -100,7 +100,13 @@
 	</script>
 	<script>
 		$(function () {
-			$("#datepicker").datepicker({
+			$("#added-datepicker").datepicker({
+				autoclose: true,
+				todayHighlight: true,
+			}).datepicker('update', new Date());
+		});
+        $(function () {
+			$("#due-datepicker").datepicker({
 				autoclose: true,
 				todayHighlight: true,
 			}).datepicker('update', new Date());
