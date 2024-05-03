@@ -3,7 +3,6 @@
             <div class="row bg-white rounded shadow-sm p-2 add-todo-wrapper align-items-center justify-content-center">
 
                 <div class="box">
-	<h1>Add Todo</h1>
     <form action="{{ url_for('create_todo') }}" method="post">
         <div class="col">
                     <input class="form-control form-control-lg border-0 add-todo-input bg-transparent rounded" type="text" placeholder="Add new ..">
@@ -12,20 +11,20 @@
                     <label class="text-secondary my-2 p-0 px-1 view-opt-label due-date-label d-none">Due date not set</label>
                     <i class="fa fa-calendar my-2 px-1 text-primary btn due-date-button" data-toggle="tooltip" data-placement="bottom" title="Set a Due date"></i>
                     <i class="fa fa-calendar-times-o my-2 px-1 text-danger btn clear-due-date-button d-none" data-toggle="tooltip" data-placement="bottom" title="Clear Due date"></i>
-                </div>
-        <div class="input-group date" data-provide="datepicker">
-            <input type="text" class="form-control">
-        <div class="input-group-addon">
-        <span class="glyphicon glyphicon-th"></span>
         </div>
-        </div>
+<!--        <div class="input-group date" data-provide="datepicker">-->
+<!--            <input type="text" class="form-control">-->
+<!--        <div class="input-group-addon">-->
+<!--        <span class="glyphicon glyphicon-th"></span>-->
+<!--        </div>-->
+<!--        </div>-->
 
-        <div class="input-group date" data-provide="datepicker">
-            <input type="text" class="form-control">
-            <div class="input-group-addon">
-                <span class="glyphicon glyphicon-th"></span>
-            </div>
-        </div>
+<!--        <div class="input-group date" data-provide="datepicker">-->
+<!--            <input type="text" class="form-control">-->
+<!--            <div class="input-group-addon">-->
+<!--                <span class="glyphicon glyphicon-th"></span>-->
+<!--            </div>-->
+<!--        </div>-->
         <button type="submit" class="btn btn-primary btn-block btn-large">Add Todo.</button>
     </form>
 </div>
@@ -34,9 +33,9 @@
 
 
 
-                <div class="col-auto px-0 mx-0 mr-2">
-                    <button type="button" class="btn btn-primary" action="{{ url_for('create_todo') }}">Add</button>
-                </div>
+<!--                <div class="col-auto px-0 mx-0 mr-2">-->
+<!--                    <button type="button" class="btn btn-primary" action="{{ url_for('create_todo') }}">Add</button>-->
+<!--                </div>-->
             </div>
         </div>
     </div>
