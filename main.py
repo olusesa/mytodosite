@@ -22,35 +22,34 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 # app.config['SECRET_KEY'] = 'QQWqWERRRWtYbggdd#$%dt'
 connection = psycopg2.connect(url)
 
-CREATE_TODOS_TABLE = ("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, username TEXT, name TEXT, "
-                      "email TEXT, password TEXT, todo TEXT, date_added TEXT, due_date TEXT,status TEXT);")
+CREATE_TODOS_TABLE = ("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, "
+                      "todo TEXT, date_added TEXT, due_date TEXT,status TEXT);")
 
 with connection:
     with connection.cursor() as cursor:
         cursor.execute(CREATE_TODOS_TABLE)
 
-INSERT_TODOS_RETURN_ID = ("INSERT INTO todos (username, name, email, password, todo, date_added, due_date, status, ) "
-                          "VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id;")
+INSERT_TODOS_RETURN_ID = ("INSERT INTO todos (todo, date_added, due_date, status, ) "
+                          "VALUES ( %s, %s, %s, %s) RETURNING id;")
 SELECT_ALL_TODOS = "SELECT * FROM todos;"
-SELECT_TODOS_BY_ID = "SELECT id, username, name, email, password, todo, filter, sort FROM todos WHERE id = %s;"
-TODOS_STATUS_BY_COMPLETED = ("SELECT id, username, name, email, password, todo, added_date, due_date, status "
+SELECT_TODOS_BY_ID = "SELECT id, todo, filter, sort FROM todos WHERE id = %s;"
+TODOS_STATUS_BY_COMPLETED = ("SELECT id, todo, added_date, due_date, status "
                              "FROM todos WHERE filter = %s;")
-TODOS_STATUS_BY_HAS_DUE_DATE = ("SELECT id, username, name, email, password, todo, added_date, due_date, status "
+TODOS_STATUS_BY_HAS_DUE_DATE = ("SELECT id, todo, added_date, due_date, status "
                                 "FROM todos WHERE filter = %s;")
-TODOS_STATUS_BY_ARCHIVED = ("SELECT id, username, name, email, password, todo, added_date, due_date, status "
+TODOS_STATUS_BY_ARCHIVED = ("SELECT id, todo, added_date, due_date, status "
                             "FROM todos WHERE filter = %s;")
-SORT_TODOS_BY_DUE_DATE = ("SELECT id, username, name, email, password, todo, added_date, due_date, status "
+SORT_TODOS_BY_DUE_DATE = ("SELECT id, todo, added_date, due_date, status "
                           "FROM todos WHERE filter = %s;")
-SORT_TODOS_BY_ADDED_DATE = ("SELECT id, username, name, email, password, todo, added_date, due_date, status "
+SORT_TODOS_BY_ADDED_DATE = ("SELECT id, todo, added_date, due_date, status "
                             "FROM todos WHERE filter = %s;")
-UPDATE_USERNAME_BY_ID = "UPDATE todos SET username = %s WHERE id = %s;"
-UPDATE_NAME_BY_ID = "UPDATE todos SET name = %s WHERE id = %s;"
-UPDATE_EMAIL_BY_ID = "UPDATE todos SET email = %s WHERE id = %s;"
 UPDATE_ADDED_DATE_BY_ID = "UPDATE todos SET added_date = %s WHERE id = %s;"
 UPDATE_DUE_DATE_BY_ID = "UPDATE todos SET due_date = %s WHERE id = %s;"
 UPDATE_STATUS_BY_ID = "UPDATE todos SET status = %s WHERE id = %s;"
 UPDATE_TODO_BY_ID = "UPDATE todos SET todo = %s WHERE id = %s;"
 DELETE_TODO_BY_ID = "DELETE FROM todos WHERE id = %s;"
+UPDATE_ALL_ENTRIES_BY_ID = ("UPDATE todos SET (todo, added_date, due_date, status) = (%s, %s, %s, %s) "
+                           "WHERE id = %s;")
 
 Bootstrap5(app)
 
@@ -167,17 +166,13 @@ def home():
 def create_todo():
     form = TodoForm()
     data = request.get_json()
-    form.username = data["username"]
-    form.name = data["name"]
-    form.email = data["email"]
-    form.password = data["password"]
     form.todo = data["todo"]
     form.added_date = data["added_date"]
     form.due_date = data["added_date"]
     form.status = data["status"]
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(INSERT_TODOS_RETURN_ID, (form.username, form.name, form.email, form.password, form.todo, form.added_date, form.due_date, form.status))
+            cursor.execute(INSERT_TODOS_RETURN_ID, (form.todo, form.added_date, form.due_date, form.status))
             user_id = cursor.fetchone()[0]
     return {"id": user_id, "username": data['username'], "name": data['name'],
             "message": f"Username:  {data['username']} created successfully."}, 201
@@ -192,8 +187,7 @@ def get_all_todos():
             if todos:
                 result = []
                 for todo in todos:
-                    result.append({"id": todo[0], "username": todo[1], "name": todo[2], "email": todo[3],
-                                   "todo": todo[5], "added_date": todo[6], "due_date": todo[7], "status": todo[8]})
+                    result.append({"id": todo[0], "todo": todo[5], "added_date": todo[6], "due_date": todo[7], "status": todo[8]})
                 return jsonify(result)
             else:
                 return jsonify({"error": f" Todo not found."}), 404
@@ -207,8 +201,7 @@ def get_todo(todo_id):
             cursor.execute("SELECT * FROM todos WHERE id = %s", (todo_id,))
             todo = cursor.fetchone()
             if todo:
-                return jsonify({"id": todo[0], "username": todo[1], "name": todo[2], "email": todo[3],
-                                   "todo": todo[5], "added_date": todo[6], "due_date": todo[7], "status": todo[8]})
+                return jsonify({"id": todo[0], "todo": todo[5], "added_date": todo[6], "due_date": todo[7], "status": todo[8]})
             else:
                 return jsonify({"error": f"Todo with ID {todo_id} not found."}), 404
     render_template("display_todos.html", todos=todo, name=current_user.name, logged_in=True)
@@ -218,35 +211,17 @@ def get_todo(todo_id):
 def update_todo_entries(todo_id):
     data = request.get_json()
     form = TodoForm()
-    form.username = data["username"]
-    form.name = data["name"]
-    form.email = data["email"]
-    form.password = data["password"]
     form.todo = data["todo"]
     form.added_date = data["added_date"]
     form.due_date = data["added_date"]
     form.status = data["status"]
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(UPDATE_USERNAME_BY_ID, (form.username, form.name, form.email, form.password, form.todo,
-                                                   form.added_date, form.due_date, form.status))
+            cursor.execute(UPDATE_ALL_ENTRIES_BY_ID, (form.todo, form.added_date, form.due_date, form.status))
             if cursor.rowcount == 0:
                 return jsonify({"error": f"Todo with ID {todo_id} not found."}), 404
     return jsonify({"id": todo_id, "username": form.username, "name": form.name, "email": form.email,
                     "message": f"Todo with username {data['username']} entries updated successfully."})
-@app.route("/update/todo/<int:todo_id>", endpoint='update_email_entry', methods=["PATCH"])
-@login_required
-def update_email_entry(todo_id):
-    data = request.get_json()
-    form = TodoForm()
-    form.email = data["email"]
-    with connection:
-        with connection.cursor() as cursor:
-            cursor.execute(UPDATE_EMAIL_BY_ID, (form.email, todo_id))
-            if cursor.rowcount == 0:
-                return jsonify({"error": f"Todo with ID {todo_id} not found."}), 404
-    return jsonify({"id": todo_id, "email": data['email'], "message":
-        f"The email of Todo with ID {todo_id} updated successfully."})
 
 @app.route("/update/todo/<int:todo_id>", endpoint='update_todo_entry', methods=["PATCH"])
 @login_required
@@ -313,11 +288,6 @@ def delete_todo(todo_id):
                 return jsonify({"error": f"User with ID {todo_id} not found."}), 404
     return jsonify({"message": f"Todo with ID {todo_id} deleted."})
 
-@app.route('/secrets', methods=['GET','POST'])
-@login_required
-def secrets():
-    print(current_user.name)
-    return render_template("secrets.html", name=current_user.name, logged_in=True)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
