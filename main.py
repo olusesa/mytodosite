@@ -126,7 +126,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("secrets"))
+        return redirect(url_for("home"))
 
     return render_template("register.html", logged_in=current_user.is_authenticated)
 
@@ -148,7 +148,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('secrets'))
+            return redirect(url_for('home'))
 
     return render_template("login.html", logged_in=current_user.is_authenticated)
 
